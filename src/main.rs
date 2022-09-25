@@ -1,3 +1,4 @@
+#[allow(unused_variables)]
 use std::fmt::Debug;
 use std::io;
 
@@ -69,7 +70,10 @@ fn main() {
     }
 
     // Vectors --------------------------------------------
+    // https://doc.rust-lang.org/std/vec/
+
     let names = vec!["Bob", "Frank", "Ferris"];
+
     for name in names.iter() {
         print(name) // "Bob", "Frank", "Ferris"
     }
@@ -87,11 +91,85 @@ fn main() {
         print(name) // "Bob", "Frank", "Ferris", "Vinicius", "Bob"
     }
 
-    // Eu posso iterar num vec movendo o owing dele para o for-loop
+    // Eu posso iterar num vec movendo o owing dele para dentro do for-loop
     for name in new_names.into_iter() {
         print(name) // "Bob", "Frank", "Ferris", "Vinicius", "Bob"
     }
 
     // ERROR: borrow of moved value
     // new_names.push("Marley");
+
+    let planetas: Vec<String> = Vec::new();
+    // let planetas: Vec<String> = vec![];
+
+    // Apesar de .push não ser valido em um immutable vec, isso é permitido
+    let planetas = vec!["Mercurio"];
+    let planetas = vec!["Mercurio", "Venus"];
+    let planetas = vec!["Mercurio", "Venus", "Terra"];
+
+    for (i, pl) in planetas.iter().enumerate() {
+        println!("O {} planeta é {}", i + 1, pl);
+    }
+
+    // ---
+
+    let mut idades = vec![19, 21, 17, 30];
+
+    for pl in idades.iter() {
+        // ERROR
+        // *pl += 5;
+    }
+
+    for pl in idades.iter_mut() {
+        // Ok
+        *pl += 10;
+        print(pl)
+    }
+
+    // Box -------------------------------------------
+    //
+    //
+    // HashMap ---------------------------------------
+    use std::collections::HashMap;
+
+    struct User {
+        name: String,
+        password: String,
+    }
+
+    type TwoNumbers = (u8, u8);
+
+    // Poderia também fazer o seguinte para usar uma struct como tipo valido numa Key do HashMap...
+    // ..
+    // #[derive(PartialEq, Eq, Hash)]
+    // struct TwoNumbers(u8, u8);
+
+    let mut users: HashMap<TwoNumbers, User> = HashMap::new();
+
+    users.insert(
+        (23, 2),
+        User {
+            name: "Talis".to_string(),
+            password: "123".to_string(),
+        },
+    );
+
+    print("Usuários:");
+    print(" - Talis || PID: 23,2");
+    print("");
+    print("Digite o pid do usuario acima. Primeiro um numero depois o outros...");
+    let p1: u8 = input("1) ").parse().unwrap(); // Como está sendo usado um 'unwrap' sem tratamento
+                                                // ao inves de um match, se o parse dar errado ele
+                                                // dispara um panic!
+    let p2: u8 = input("2) ").parse().unwrap();
+
+    let default = User {
+        name: "Digitou errado".to_string(),
+        password: "***".to_string(),
+    };
+
+    let user_selected = users.get(&(p1, p2)).unwrap_or(&default);
+
+    println!("User => {}", user_selected.name);
+    println!("Password => {}", user_selected.password);
 }
