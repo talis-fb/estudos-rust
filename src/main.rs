@@ -172,4 +172,52 @@ fn main() {
 
     println!("User => {}", user_selected.name);
     println!("Password => {}", user_selected.password);
+
+    // Destructure
+    let User { name, password } = user_selected;
+    println!("Mesmo user => {}", name);
+    println!("Mesma password => {}", password);
+
+    // Destructure 2
+    let User {
+        name: same_name,
+        password: same_password,
+    } = user_selected;
+    println!("Mesmo user => {}", same_name);
+    println!("Mesma password => {}", same_password);
+
+    // Struct de tuple
+    struct CasalNumeros(i32, i32);
+    let casal1 = CasalNumeros(7, 11);
+    println!("{} + {} = <3", casal1.0, casal1.1);
+
+    // ENUMS ----------------------------------------------------------
+    enum Events {
+        TurnOn,
+        TurnOff,
+        UserActive(User),
+        KeyPress(char),
+        Click { x: i32, y: i32 },
+        See(bool),
+    }
+
+    fn emit(e: Events) {
+        match e {
+            Events::TurnOn => print("Ligou!"),
+            Events::TurnOff => print("Desligou!"),
+            Events::KeyPress(c) => println!("Apertou a tecla {}", c),
+            _ => print("Alguma coisa"),
+        }
+    }
+
+    let mut event1 = Events::TurnOn;
+    emit(event1);
+    event1 = Events::TurnOff;
+    emit(event1);
+
+    use Events::{KeyPress, See};
+    let event2 = KeyPress('K');
+    emit(event2);
+    let event3 = See(true);
+    emit(event3);
 }
